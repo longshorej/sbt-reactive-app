@@ -88,8 +88,8 @@ object Lagom {
     def toEndpoint(serviceName: String, pathBegins: Seq[String]): HttpEndpoint =
       HttpEndpoint(
         name = serviceName,
-        port = 0,
-        ingress = pathBegins.distinct.map {
+        portIngress = PortIngress(0),
+        httpIngress = pathBegins.distinct.map {
           case "" => HttpPathIngress("^/")
           case pt => HttpPathIngress(s"^$pt")
         }
@@ -100,7 +100,7 @@ object Lagom {
         endpoints
           .find(_.name == endpointEntry.name)
           .fold(endpointEntry) { prevEndpoint =>
-            prevEndpoint.copy(ingress = prevEndpoint.ingress ++ endpointEntry.ingress)
+            prevEndpoint.copy(httpIngress = prevEndpoint.httpIngress ++ endpointEntry.httpIngress)
           }
 
       endpoints.filterNot(_.name == endpointEntry.name) :+ mergedEndpoint

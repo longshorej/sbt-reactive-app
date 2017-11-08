@@ -25,26 +25,29 @@ sealed trait Endpoint {
   def version: Option[Version]
 }
 
-case class HttpEndpoint(name: String, port: Int, ingress: Seq[Ingress], version: Option[Version] = Some(MajorVersion)) extends Endpoint {
+case class HttpEndpoint(name: String, portIngress: PortIngress, httpIngress: Seq[HttpIngress], version: Option[Version] = Some(MajorVersion)) extends Endpoint {
   val protocol: String = "http"
+  val port: Int = portIngress.port
 }
 
 object HttpEndpoint {
-  def apply(name: String, port: Int, ingress: Ingress*): HttpEndpoint = new HttpEndpoint(name, port, ingress.toVector)
+  def apply(name: String, port: Int, ingress: HttpIngress*): HttpEndpoint = new HttpEndpoint(name, PortIngress(port), ingress.toVector)
 }
 
-case class TcpEndpoint(name: String, port: Int, ingress: Seq[PortIngress], version: Option[Version] = Some(MajorVersion)) extends Endpoint {
+case class TcpEndpoint(name: String, ingress: PortIngress, version: Option[Version] = Some(MajorVersion)) extends Endpoint {
   val protocol: String = "tcp"
+  val port: Int = ingress.port
 }
 
 object TcpEndpoint {
-  def apply(name: String, port: Int, ingress: PortIngress*): TcpEndpoint = new TcpEndpoint(name, port, ingress.toVector)
+  def apply(name: String, port: Int): TcpEndpoint = new TcpEndpoint(name, PortIngress(port))
 }
 
-case class UdpEndpoint(name: String, port: Int, ingress: Seq[PortIngress], version: Option[Version] = Some(MajorVersion)) extends Endpoint {
+case class UdpEndpoint(name: String, ingress: PortIngress, version: Option[Version] = Some(MajorVersion)) extends Endpoint {
   val protocol: String = "udp"
+  val port: Int = ingress.port
 }
 
 object UdpEndpoint {
-  def apply(name: String, port: Int, ingress: PortIngress*): UdpEndpoint = new UdpEndpoint(name, port, ingress.toVector)
+  def apply(name: String, port: Int): UdpEndpoint = new UdpEndpoint(name, PortIngress(port))
 }
