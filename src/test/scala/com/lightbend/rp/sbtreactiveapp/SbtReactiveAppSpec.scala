@@ -43,11 +43,11 @@ class SbtReactiveAppSpec extends UnitSpec {
         endpoints = Vector(
           HttpEndpoint("ep1", 1234),
           HttpEndpoint("ep2", 5678, HttpPathIngress("^/my-url.*$"), HttpHostIngress("hello.world.com")),
-          TcpEndpoint("ep3", 9123, PortIngress(8080)),
-          UdpEndpoint("ep4", 8123, PortIngress(8080)),
-          HttpEndpoint("ep5", 1235, ingress = Vector.empty, version = None),
-          HttpEndpoint("ep6", 1236, ingress = Vector.empty, version = Some(LiteralVersion("buggy123"))),
-          HttpEndpoint("ep7", 1237, ingress = Vector.empty, version = Some(MajorMinorVersion))
+          TcpEndpoint("ep3", PortIngress(9123)),
+          UdpEndpoint("ep4", PortIngress(8123)),
+          HttpEndpoint("ep5", PortIngress(1235), httpIngress = Vector.empty, version = None),
+          HttpEndpoint("ep6", PortIngress(1236), httpIngress = Vector.empty, version = Some(LiteralVersion("buggy123"))),
+          HttpEndpoint("ep7", PortIngress(1237), httpIngress = Vector.empty, version = Some(MajorMinorVersion))
         ),
         volumes = Map(
           "/data/vol1" -> HostPathVolume("/var/lib/vol1"),
@@ -83,14 +83,10 @@ class SbtReactiveAppSpec extends UnitSpec {
         "com.lightbend.rp.endpoints.2.protocol" -> "tcp",
         "com.lightbend.rp.endpoints.2.port" -> "9123",
         "com.lightbend.rp.endpoints.2.version" -> "1",
-        "com.lightbend.rp.endpoints.2.ingress.0.type" -> "port",
-        "com.lightbend.rp.endpoints.2.ingress.0.port" -> "8080",
         "com.lightbend.rp.endpoints.3.name" -> "ep4",
         "com.lightbend.rp.endpoints.3.protocol" -> "udp",
         "com.lightbend.rp.endpoints.3.port" -> "8123",
         "com.lightbend.rp.endpoints.3.version" -> "1",
-        "com.lightbend.rp.endpoints.3.ingress.0.type" -> "port",
-        "com.lightbend.rp.endpoints.3.ingress.0.port" -> "8080",
         "com.lightbend.rp.endpoints.4.name" -> "ep5",
         "com.lightbend.rp.endpoints.4.port" -> "1235",
         "com.lightbend.rp.endpoints.4.protocol" -> "http",

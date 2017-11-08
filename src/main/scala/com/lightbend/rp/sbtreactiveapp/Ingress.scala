@@ -18,8 +18,10 @@ package com.lightbend.rp.sbtreactiveapp
 
 sealed trait Ingress
 
-case class HttpPathIngress(path: String) extends Ingress
-
 case class PortIngress(port: Int) extends Ingress
 
-case class HttpHostIngress(host: String) extends Ingress
+sealed trait HttpIngress extends Ingress
+
+case class HttpPathIngress(path: String) extends HttpIngress
+
+case class HttpHostIngress(host: String) extends HttpIngress
